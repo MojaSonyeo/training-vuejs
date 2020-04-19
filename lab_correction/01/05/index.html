@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="movies.js"></script>
+    <script src="script.js"></script>
+</head>
+
+<body onload="init()">
+
+    <h2>Lab 01/05</h2>
+
+    <div id="app">
+        <h3>Afficher une liste à puces avec tous les films qui sont déjà sortis</h3>
+        <small>Devrait ressembler à ça</small>
+        <ul>
+            <li>
+                Titre du film (année du film)
+                <ul>
+                    <li>Acteur 1</li>
+                    <li>Acteur 2</li>
+                    <li>Acteur 3</li>
+                </ul>
+            </li>
+        </ul>
+
+        <br>
+
+        <ul>
+            <li v-for="movie in movies" :key="movie.title" v-if="movie.rating > 2">
+                <span :style="movie.comingSoon ? 'color: red' : ''">
+                    {{ movie.title }} ({{ movie.year }})
+                </span>
+                <ul>
+                    <li v-for="actor in movie.actors">{{ actor }}</li>
+                </ul>
+                </v-if>
+            </li>
+        </ul>
+    </div>
+
+</body>
+
+</html>
