@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <!--
+        Twitter Bootstrap
+        See (https://getbootstrap.com/)
+    -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <!-- Vue.js -->
+    <script src="https://unpkg.com/vue"></script>
+
+    <!-- Data -->
+    <script src="data.js"></script>
+
+    <!-- App -->
+    <script src="app.js"></script>
+</head>
+
+<body onload="initApp()" class="bg-light">
+
+    <h2>Lab 02/02</h2>
+
+    <div class="container" id="app">
+        <div class="row p-3">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title"><i class="fa fa-search"></i>&nbsp;Catalogue</h4>
+                        <div class="form-group">
+                            <label for="category">Catégorie</label>
+                            <select id="category" class="form-control" v-model="categorySelected">
+                                <option v-for="category in categoriesSorted" :key="category.name" :value="category">
+                                    {{category.name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="item">Article</label>
+                            <select id="item" class="form-control" v-model="itemSelected">
+                                <option v-for="item in itemsSorted" :key="item.title" :value="item">{{item.title}}
+                                    ({{item.author}})</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-secondary btn-block" :disabled="itemSelected === undefined" @click="addToCart">Ajouter au panier</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title"><i class="fa fa-shopping-cart"></i>&nbsp;Panier</h4>
+                        <ul class="list-group mb-3">
+
+                            <li class="list-group-item" v-for="(item, index) in cart.items" :key="item.title">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6>{{ item.title }}</h6>
+                                    </div>
+                                    <div class="col-md-3 text-right">
+                                        <span class="text-muted">{{ item.unitPrice.toFixed(2) }} €</span>
+                                    </div>
+                                    <div class="col-md-1 text-right">
+                                        <a href="#" class="text-danger" @click="removeFromCart(index)"><i class="fa fa-remove"></i></a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h6 class="text-muted">{{ item.author }}</h6>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item bg-light">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h6><strong>Total</strong></h6>
+                                    </div>
+                                    <div class="col-5 text-right">
+                                        <span><strong>{{ cartTotal }} €</strong></span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row p-3">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title"><i class="fa fa-address-card-o"></i>&nbsp;Contact</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="lastName">Nom</label>
+                                    <input type="text" class="form-control" id="lastName" v-model="contact.lastName">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="firstName">Prénom</label>
+                                    <input type="text" class="form-control" id="firstName" v-model="contact.firstName">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="address">Adresse</label>
+                                    <input type="text" class="form-control" id="address" v-model="contact.address">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="zipCode">Code postal</label>
+                                    <input type="text" class="form-control" id="zipCode" v-model="contact.zipCode">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="country">Pays</label>
+                                    <select id="country" class="form-control" v-model="contact.country">
+                                        <option v-for="country in countries" :key="country.code3" :value="country">{{ country.name }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row p-3">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-lg btn-block btn-primary" :disabled="!isPaymentEnabled()" @click="pay">Payer !</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="app"></div>
+
+</body>
+
+</html>
